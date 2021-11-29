@@ -1,0 +1,36 @@
+{
+  "translations": {
+    "home": {
+      "tr": "anasayfa",
+      "en": "home",
+      "de": "haus"
+    },
+    "categories": {
+      "tr": "kategoriler",
+      "en": "categories",
+      "de": "kategorien"
+    },
+    "category": {
+      "tr": "kategori",
+      "en": "category",
+      "de": "kategory"
+    }
+  },
+  "pages": {
+    "home": {
+      "pathname": "/",
+      "url": "/t(home)"
+    },
+    "categories": {
+      "pathname": "/categories",
+      "url": "/t(categories)"
+    },
+    "category": {
+      "pathname": "/category/:slug*",
+      "url": "/t(category)/:slug/:slug?"
+    }
+  },
+  "options": {
+    "useFileSystemRouting": false
+  }
+}
