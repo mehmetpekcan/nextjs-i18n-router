@@ -1,0 +1,35 @@
+{
+  "name": "nextjs-i18n-router",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "description": "Full solution for I18n URL routing in NextJS",
+  "keywords": [
+    "nextjs",
+    "router",
+    "url",
+    "i18n",
+    "localization",
+    "next"
+  ],
+  "repository": "https://github.com/mehmetpekcan/nextjs-i18n-router.git",
+  "scripts": {
+    "build": "rm -rf dist && babel src -d dist"
+  },
+  "private": false,
+  "author": "Mehmet Pekcan",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.16.4",
+    "@babel/preset-env": "^7.16.4"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.16.3"
+  }
+}
