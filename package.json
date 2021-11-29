@@ -19,7 +19,8 @@
     "build": "rm -rf dist && babel src -d dist"
   },
   "dependencies": {
-    "@babel/runtime": "^7.16.3"
+    "@babel/runtime": "^7.16.3",
+    "path-to-regexp": "^6.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",

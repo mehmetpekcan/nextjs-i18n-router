@@ -18,16 +18,20 @@
   },
   "pages": {
     "home": {
-      "pathname": "/",
-      "url": "/t(home)"
+      "destination": "/",
+      "source": "/t(home)"
     },
     "categories": {
-      "pathname": "/categories",
-      "url": "/t(categories)"
+      "destination": "/categories",
+      "source": "/t(categories)"
+    },
+    "category404": {
+      "destination": "/404",
+      "source": "/t(category)/:slug/:slug/:slug+"
     },
     "category": {
-      "pathname": "/category/:slug*",
-      "url": "/t(category)/:slug/:slug?"
+      "destination": "/category/:slug*",
+      "source": "/t(category)/:slug*"
     }
   },
   "options": {

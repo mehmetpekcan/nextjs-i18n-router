@@ -7,7 +7,10 @@ import { useRouter } from "nextjs-i18n-router";
 export default function Home() {
   const router = useRouter();
 
-  router.push("a", "b");
+  router.push("category", undefined, {
+    locale: "de",
+    params: { slug: ["test", "test2"] },
+  });
 
   return (
     <div className={styles.container}>

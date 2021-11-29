@@ -7,4 +7,12 @@ module.exports = withNextI18nRouter({
     localeDetection: false,
   },
   reactStrictMode: true,
+  rewrites: async function rewrites() {
+    return [
+      {
+        source: "/murat",
+        destination: "/",
+      },
+    ];
+  },
 });

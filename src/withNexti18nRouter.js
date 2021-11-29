@@ -19,7 +19,6 @@ module.exports = (nextConfig = {}) => {
        * Also 'useFileSystemPublicRoutes' passing false creates another problem
        * when using dynamic routes rewriting.
        */
-
       try {
         const routesJSON = fs.readFileSync(ROUTES_PATH, "utf8");
         const { pages, translations } = JSON.parse(routesJSON);
@@ -28,32 +27,42 @@ module.exports = (nextConfig = {}) => {
           nextConfig.i18n.locales.forEach((locale) => {
             const [name, page] = entry;
 
-            let { url } = page;
+            let { source } = page;
             const translateKeyRegex = /t\((.*)\)/;
 
-            while (translateKeyRegex.test(url)) {
-              const [key, value] = url.match(translateKeyRegex);
-              url = url.replace(key, translations[value][locale]);
+            while (translateKeyRegex.test(source)) {
+              const [key, value] = source.match(translateKeyRegex);
+              source = source.replace(key, translations[value][locale]);
             }
 
             __ROUTES__.push({
-              source: `/${locale}${url}`,
-              destination: `/${locale}${page.pathname}`,
+              source: `/${locale}${source}`,
+              destination: `/${locale}${page.destination}`,
               locale: false,
             });
-            __ROUTES_WITH_PROPERTIES__[name] = { ...page };
+            __ROUTES_WITH_PROPERTIES__[`${locale}_${name}`] = {
+              ...page,
+              source: `/${locale}${source}`,
+              destination: `/${locale}${page.destination}`,
+            };
           });
         });
 
+        // TODO: make __ROUTES_WITH_PROPERTIES__ and __ROUTES__ as one
         process.env.NEXT_PUBLIC_I18N_ROUTES = JSON.stringify(
           __ROUTES_WITH_PROPERTIES__
         );
+
+        console.log(process.env.NEXT_PUBLIC_I18N_ROUTES);
       } catch (err) {
         throw new Error(err);
       }
 
       // todo: custom one should be included here
-      return [...__ROUTES__];
+      return [
+        ...(nextConfig.rewrites && (await nextConfig.rewrites())),
+        ...__ROUTES__,
+      ];
     },
   });
 };
