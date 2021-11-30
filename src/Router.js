@@ -1,26 +1,67 @@
-import Router from "next/router";
-import { pushWithI18n, replaceWithiI18n } from "./utils";
+import React from "react";
+import nextRouter, { useRouter as useNextRouter } from "next/router";
+import { compile } from "path-to-regexp";
 
-class I18nRouter {
-  constructor() {
-    this.router = Router;
-    this.routes = JSON.parse(process.env.NEXT_PUBLIC_I18N_ROUTES);
-    this.time = new Date().getTime();
+const createUrl = (name, locale, params) => {
+  try {
+    const options = JSON.parse(process.env.NEXT_PUBLIC_ROUTER_OPTIONS);
+    const routes = JSON.parse(process.env.NEXT_PUBLIC_I18N_ROUTES);
 
-    console.log(this.routes);
+    const { source } = routes[`${locale}_${name}`];
+
+    let finalSource =
+      locale === options.defaultLocale && options.hideDefaultLocalePrefix
+        ? `${source.replace(`/${locale}`, "")}`
+        : `${source}`;
+
+    const pathGenerator = compile(finalSource);
+
+    if (params) {
+      finalSource = pathGenerator(params);
+
+      // TODO: check for remaining params if there is they should be quires
+    }
+
+    return finalSource;
+  } catch (error) {
+    return "/";
   }
+};
 
-  push(name, options = {}) {
-    pushWithI18n(this.router, name, options);
-  }
+const pushWithI18n = (push, name, as, options = {}) => {
+  const translatedUrl = createUrl(name, options.locale, options.params);
 
-  replace(name, options = {}) {
-    replaceWithiI18n(this.router, name, options);
-  }
+  push(translatedUrl, as || translatedUrl, { locale: options.locale || false });
+};
 
-  getTime() {
-    return this.time;
-  }
-}
+const replaceWithI18n = (replace, name, as, options = {}) => {
+  const translatedUrl = createUrl(name, options.locale, options.params);
 
-export default new I18nRouter();
+  replace(translatedUrl, as || translatedUrl, {
+    locale: options.locale || false,
+  });
+};
+
+const routerAdapter = ({ push, replace, prefetch, locale, ...rest }) => ({
+  push: (name, as, options) =>
+    pushWithI18n(push, name, as, { locale, ...options }),
+  replace: (name, as, options) =>
+    replaceWithI18n(replace, name, as, { locale, ...options }),
+  // TODO: create custom prefetch
+  locale,
+  ...rest,
+});
+
+const useRouter = () => {
+  const router = useNextRouter();
+
+  return routerAdapter(router);
+};
+
+const router = () => {
+  const i18nRouter = nextRouter;
+
+  return routerAdapter(i18nRouter);
+};
+
+export { createUrl, useRouter, router };

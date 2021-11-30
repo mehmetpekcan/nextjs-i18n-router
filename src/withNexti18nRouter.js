@@ -1,9 +1,14 @@
 const fs = require("fs");
 const path = require("path");
 
-const { adaptRoutesToNextJS } = require("./utils");
+const adaptRoutesToNextJS = (routesConfig) =>
+  Object.values(routesConfig).map(({ source, destination }) => ({
+    source,
+    destination,
+    locale: false,
+  }));
 
-module.exports = (nextConfig = {}) => {
+const withNextI18nRouter = (nextConfig = {}) => {
   return Object.assign({}, nextConfig, {
     async rewrites() {
       const __ROUTES__ = {};
@@ -58,3 +63,5 @@ module.exports = (nextConfig = {}) => {
     },
   });
 };
+
+module.exports = withNextI18nRouter;
