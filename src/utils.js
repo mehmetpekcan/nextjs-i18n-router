@@ -1,5 +1,12 @@
 import { compile } from "path-to-regexp";
 
+export const adaptRoutesToNextJS = (routesConfig) =>
+  Object.values(routesConfig).map(({ source, destination }) => ({
+    source,
+    destination,
+    locale: false,
+  }));
+
 export const createUrl = (name, locale, params) => {
   try {
     const options = JSON.parse(process.env.NEXT_PUBLIC_ROUTER_OPTIONS);

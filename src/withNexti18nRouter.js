@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const { adaptRoutesToNextJS } = require("./utils");
+
 module.exports = (nextConfig = {}) => {
   return Object.assign({}, nextConfig, {
     async rewrites() {
@@ -40,14 +42,19 @@ module.exports = (nextConfig = {}) => {
         throw new Error(err);
       }
 
-      return [
-        ...(nextConfig.rewrites && (await nextConfig.rewrites())),
-        ...Object.values(__ROUTES__).map(({ source, destination }) => ({
-          source,
-          destination,
-          locale: false,
-        })),
-      ];
+      const i18nrewrites = adaptRoutesToNextJS(__ROUTES__);
+      const existingRewrites = nextConfig.rewrites
+        ? await nextConfig.rewrites()
+        : [];
+
+      if (Array.isArray(existingRewrites)) {
+        return [...existingRewrites, ...i18nrewrites];
+      }
+
+      return {
+        ...existingRewrites,
+        afterFiles: [...(existingRewrites.afterFiles || []), ...i18nrewrites],
+      };
     },
   });
 };

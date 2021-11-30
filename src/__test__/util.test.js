@@ -1,15 +1,16 @@
 import { jest } from "@jest/globals";
 
-import mockRoutes from "./mocks/routes.json";
+import * as MOCK_ROUTES from "./mocks/routes.json";
 
 describe("Create url", () => {
   const OLD_ENV = process.env;
 
   beforeEach(() => {
     jest.resetModules();
+
     process.env = {
       ...OLD_ENV,
-      NEXT_PUBLIC_I18N_ROUTES: JSON.stringify(mockRoutes),
+      NEXT_PUBLIC_I18N_ROUTES: JSON.stringify(MOCK_ROUTES),
     };
   });
 
