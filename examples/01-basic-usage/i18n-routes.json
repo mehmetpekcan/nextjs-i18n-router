@@ -35,6 +35,6 @@
     }
   },
   "options": {
-    "useFileSystemRouting": false
+    "hideDefaultLocalePrefix": false
   }
 }

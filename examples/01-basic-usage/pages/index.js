@@ -7,11 +7,6 @@ import { useRouter } from "nextjs-i18n-router";
 export default function Home() {
   const router = useRouter();
 
-  router.push("category", undefined, {
-    locale: "de",
-    params: { slug: ["test", "test2"] },
-  });
-
   return (
     <div className={styles.container}>
       <Head>
@@ -21,13 +16,34 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+        <button
+          onClick={() => {
+            console.log(router);
+            router.push("category", undefined, {
+              params: { slug: ["test", "test2"] },
+            });
+          }}
+        >
+          Test
+        </button>
+        <div>
+          <h1 className={styles.title}>
+            Welcome to <a href="https://nextjs.org">Next.js I18n Router</a>
+          </h1>
+        </div>
 
         <p className={styles.description}>
-          Get started by editing{" "}
-          <code className={styles.code}>pages/index.js</code>
+          Current route information:
+          <br />
+          <code className={styles.code}>Locale: {router.locale}</code>
+          <br />
+          <code className={styles.code}>As: {router.asPath}</code>
+          <br />
+          <code className={styles.code}>Pathname: {router.pathname}</code>
+          <br />
+          <code className={styles.code}>
+            Query: {JSON.stringify(router.query)}
+          </code>
         </p>
 
         <div className={styles.grid}>
