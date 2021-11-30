@@ -1,16 +1,22 @@
 import React from "react";
-import Router from "./Router";
+import { useRouter } from "next/router";
 
-import { replaceWithiI18n, pushWithI18n } from "./utils";
+import { replaceWithI18n, pushWithI18n } from "./utils";
 
-function usei18nRouter() {
-  const router = Router;
+const routerAdapter = ({ push, replace, prefetch, locale, ...rest }) => ({
+  push: (name, as, options) =>
+    pushWithI18n(push, name, as, { locale, ...options }),
+  replace: (name, as, options) =>
+    replaceWithI18n(replace, name, as, { locale, ...options }),
+  // TODO: create custom prefetch
+  locale,
+  ...rest,
+});
 
-  router.push = (name, as, options) => pushWithI18n(router, name, as, options);
-  router.replace = (name, as, options) =>
-    replaceWithiI18n(router, name, as, options);
+const usei18nRouter = () => {
+  const router = useRouter();
 
-  return router;
-}
+  return routerAdapter(router);
+};
 
 export default usei18nRouter;

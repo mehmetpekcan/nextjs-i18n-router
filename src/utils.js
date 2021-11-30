@@ -1,12 +1,15 @@
 import { compile } from "path-to-regexp";
 
-const getRoute = (route) =>
-  JSON.parse(process.env.NEXT_PUBLIC_I18N_ROUTES)[route];
+const { options, ...routes } = (() =>
+  JSON.parse(process.env.NEXT_PUBLIC_I18N_ROUTES))();
 
-const generateUrl = (name, locale, params) => {
+const createUrl = (name, locale, params) => {
   try {
-    const { source } = getRoute(`${locale}_${name}`);
-    let finalSource = `${source}`;
+    const { source } = routes[`${locale}_${name}`];
+    let finalSource =
+      locale === options.defaultLocale && options.hideDefaultLocalePrefix
+        ? `${source.replace(`/${locale}`, "")}`
+        : `${source}`;
 
     const pathGenerator = compile(finalSource);
 
@@ -22,20 +25,16 @@ const generateUrl = (name, locale, params) => {
   }
 };
 
-export function pushWithI18n(router, name, as, options = {}) {
-  // router.push("/", "/ahmet");
+export function pushWithI18n(push, name, as, options = {}) {
+  const translatedUrl = createUrl(name, options.locale, options.params);
 
-  console.log(
-    "pushWithI18n",
-    generateUrl(name, options.locale || router.locale, options.params)
-  );
+  push(translatedUrl, as || translatedUrl, { locale: options.locale || false });
 }
 
-export function replaceWithiI18n(router, name, as, options = {}) {
-  // router.push("/", "/ahmet");
+export function replaceWithI18n(replace, name, as, options = {}) {
+  const translatedUrl = createUrl(name, options.locale, options.params);
 
-  console.log(
-    "replaceWithiI18n",
-    generateUrl(name, options.locale || router.locale, options.params)
-  );
+  replace(translatedUrl, as || translatedUrl, {
+    locale: options.locale || false,
+  });
 }

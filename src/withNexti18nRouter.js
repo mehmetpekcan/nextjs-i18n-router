@@ -21,7 +21,7 @@ module.exports = (nextConfig = {}) => {
        */
       try {
         const routesJSON = fs.readFileSync(ROUTES_PATH, "utf8");
-        const { pages, translations } = JSON.parse(routesJSON);
+        const { pages, translations, options } = JSON.parse(routesJSON);
 
         Object.entries(pages).forEach((entry) => {
           nextConfig.i18n.locales.forEach((locale) => {
@@ -49,6 +49,10 @@ module.exports = (nextConfig = {}) => {
         });
 
         // TODO: make __ROUTES_WITH_PROPERTIES__ and __ROUTES__ as one
+        __ROUTES_WITH_PROPERTIES__.options = {
+          ...options,
+          defaultLocale: nextConfig.i18n.defaultLocale,
+        };
         process.env.NEXT_PUBLIC_I18N_ROUTES = JSON.stringify(
           __ROUTES_WITH_PROPERTIES__
         );
