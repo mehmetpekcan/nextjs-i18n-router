@@ -16,7 +16,8 @@
   "author": "Mehmet Pekcan",
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf dist && babel src -d dist"
+    "build": "rm -rf dist && babel src -d dist",
+    "test": "jest"
   },
   "dependencies": {
     "@babel/runtime": "^7.16.3",
@@ -26,7 +27,8 @@
     "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.0",
     "@babel/plugin-transform-runtime": "^7.16.4",
-    "@babel/preset-env": "^7.16.4"
+    "@babel/preset-env": "^7.16.4",
+    "jest": "^27.4.2"
   },
   "browser": {
     "fs": false,

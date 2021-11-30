@@ -1,11 +1,13 @@
 import { compile } from "path-to-regexp";
 
-const { options, ...routes } = (() =>
-  JSON.parse(process.env.NEXT_PUBLIC_I18N_ROUTES))();
+const getConfig = () => JSON.parse(process.env.NEXT_PUBLIC_I18N_ROUTES);
 
-const createUrl = (name, locale, params) => {
+export const createUrl = (name, locale, params) => {
   try {
+    const { options, ...routes } = getConfig();
+    console.log(routes);
     const { source } = routes[`${locale}_${name}`];
+
     let finalSource =
       locale === options.defaultLocale && options.hideDefaultLocalePrefix
         ? `${source.replace(`/${locale}`, "")}`

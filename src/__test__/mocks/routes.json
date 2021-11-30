@@ -1,0 +1,41 @@
+{
+  "translations": {
+    "home": {
+      "tr": "anasayfa",
+      "en": "home",
+      "de": "haus"
+    },
+    "categories": {
+      "tr": "kategoriler",
+      "en": "categories",
+      "de": "kategorien"
+    },
+    "category": {
+      "tr": "kategori",
+      "en": "category",
+      "de": "kategory"
+    }
+  },
+  "pages": {
+    "home": {
+      "destination": "/",
+      "source": "/t(home)"
+    },
+    "categories": {
+      "destination": "/categories",
+      "source": "/t(categories)"
+    },
+    "category404": {
+      "destination": "/404",
+      "source": "/t(category)/:slug/:slug/:slug+"
+    },
+    "category": {
+      "destination": "/category/:slug*",
+      "source": "/t(category)/:slug*"
+    }
+  },
+  "options": {
+    "defaultLocale": "tr",
+    "hideDefaultLocalePrefix": false
+  }
+}
