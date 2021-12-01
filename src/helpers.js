@@ -40,13 +40,21 @@ const replaceWithI18n = (replace, name, as, options = {}) => {
   });
 };
 
-const routerAdapter = ({ push, replace, prefetch, locale, ...rest }) => ({
+const routerAdapter = ({
+  push,
+  replace,
+  prefetch,
+  locale,
+  asPath,
+  ...rest
+}) => ({
   push: (name, as, options) =>
     pushWithI18n(push, name, as, { locale, ...options }),
   replace: (name, as, options) =>
     replaceWithI18n(replace, name, as, { locale, ...options }),
   // TODO: create custom prefetch
   locale,
+  asPath: `/${locale}${asPath}`,
   ...rest,
 });
 
