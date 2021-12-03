@@ -26,18 +26,15 @@ const createUrl = (name, locale, params) => {
   }
 };
 
-const pushWithI18n = (push, name, as, options = {}) => {
+const handler = (routeChange, name, as, options = {}) => {
   const translatedUrl = createUrl(name, options.locale, options.params);
+  const args = [translatedUrl, as || translatedUrl];
 
-  push(translatedUrl, as || translatedUrl, { locale: options.locale || false });
-};
+  if (options) {
+    args.push({ locale: false, ...options });
+  }
 
-const replaceWithI18n = (replace, name, as, options = {}) => {
-  const translatedUrl = createUrl(name, options.locale, options.params);
-
-  replace(translatedUrl, as || translatedUrl, {
-    locale: options.locale || false,
-  });
+  routeChange(...args);
 };
 
 const routerAdapter = ({
@@ -48,13 +45,11 @@ const routerAdapter = ({
   asPath,
   ...rest
 }) => ({
-  push: (name, as, options) =>
-    pushWithI18n(push, name, as, { locale, ...options }),
-  replace: (name, as, options) =>
-    replaceWithI18n(replace, name, as, { locale, ...options }),
-  // TODO: create custom prefetch
   locale,
   asPath: `/${locale}${asPath}`,
+  prefetch: (name, as) => handler(prefetch, name, as, null),
+  push: (name, as, opts) => handler(push, name, as, { locale, ...opts }),
+  replace: (name, as, opts) => handler(replace, name, as, { locale, ...opts }),
   ...rest,
 });
 
