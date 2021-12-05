@@ -5,14 +5,14 @@
       "en": "home",
       "de": "haus"
     },
-    "categories": {
+    "users": {
       "tr": "kategoriler",
-      "en": "categories",
+      "en": "users",
       "de": "kategorien"
     },
-    "category": {
+    "user": {
       "tr": "kategori",
-      "en": "category",
+      "en": "user",
       "de": "kategory"
     }
   },
@@ -21,17 +21,17 @@
       "destination": "/",
       "source": "/t(home)"
     },
-    "categories": {
-      "destination": "/categories",
-      "source": "/t(categories)"
+    "users": {
+      "destination": "/users",
+      "source": "/t(users)"
     },
     "category404": {
       "destination": "/404",
-      "source": "/t(category)/:slug/:slug/:slug+"
+      "source": "/t(user)/:slug/:slug/:slug+"
     },
-    "category": {
-      "destination": "/category/:slug*",
-      "source": "/t(category)/:slug*"
+    "user": {
+      "destination": "/user/:slug*",
+      "source": "/t(user)/:slug*"
     }
   },
   "options": {

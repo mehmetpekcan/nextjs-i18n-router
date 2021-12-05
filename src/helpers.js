@@ -12,13 +12,8 @@ const createUrl = (name, locale, params) => {
         ? `${source.replace(`/${locale}`, "")}`
         : `${source}`;
 
-    const pathGenerator = compile(finalSource);
-
-    if (params) {
-      finalSource = pathGenerator(params);
-
-      // TODO: check for remaining params if there is they should be quires
-    }
+    const toUrl = compile(finalSource);
+    finalSource = toUrl(params);
 
     return finalSource;
   } catch (error) {

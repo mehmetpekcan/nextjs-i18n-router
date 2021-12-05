@@ -40,30 +40,26 @@ export default function Home() {
               <p>Go `home` route.</p>
             </a>
           </Link>
-          <Link name="category" params={{ slug: "slug-1" }} passHref>
+          <Link name="user" params={{ slug: "slug-1" }} passHref>
             <a className={styles.card}>
-              <h2>`category` &rarr;</h2>
-              <p>Go `category` route with one param.</p>
+              <h2>`user` &rarr;</h2>
+              <p>Go `user` route with one param.</p>
+            </a>
+          </Link>
+          <Link name="user" params={{ slug: ["slug-1", "slug-2"] }} passHref>
+            <a className={styles.card}>
+              <h2>`user` &rarr;</h2>
+              <p>Go `user` route with two param.</p>
             </a>
           </Link>
           <Link
-            name="category"
-            params={{ slug: ["slug-1", "slug-2"] }}
-            passHref
-          >
-            <a className={styles.card}>
-              <h2>`category` &rarr;</h2>
-              <p>Go `category` route with two param.</p>
-            </a>
-          </Link>
-          <Link
-            name="category"
+            name="user"
             params={{ slug: ["slug-1", "slug-2", "slug-3"] }}
             passHref
           >
             <a className={styles.card}>
-              <h2>`category` &rarr;</h2>
-              <p>Go `category` route with three param.</p>
+              <h2>`user` &rarr;</h2>
+              <p>Go `user` route with three param.</p>
             </a>
           </Link>
         </div>

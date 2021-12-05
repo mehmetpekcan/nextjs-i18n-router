@@ -5,15 +5,15 @@
       "en": "home",
       "de": "haus"
     },
-    "categories": {
-      "tr": "kategoriler",
-      "en": "categories",
-      "de": "kategorien"
+    "users": {
+      "tr": "kullanicilar",
+      "en": "users",
+      "de": "benutzer"
     },
-    "category": {
-      "tr": "kategori",
-      "en": "category",
-      "de": "kategory"
+    "user": {
+      "tr": "kullanici",
+      "en": "user",
+      "de": "benutzer"
     }
   },
   "pages": {
@@ -21,17 +21,21 @@
       "destination": "/",
       "source": "/t(home)"
     },
-    "categories": {
-      "destination": "/categories",
-      "source": "/t(categories)"
-    },
-    "category404": {
+    "users404": {
       "destination": "/404",
-      "source": "/t(category)/:slug/:slug/:slug+"
+      "source": "/t(users)/:slug/:slug*/"
     },
-    "category": {
-      "destination": "/category/:slug*",
-      "source": "/t(category)/:slug*"
+    "users": {
+      "destination": "/user/:slug*",
+      "source": "/t(users)/:slug*"
+    },
+    "user404": {
+      "destination": "/404",
+      "source": "/t(user)/:slug/:slug/:slug/:slug*"
+    },
+    "user": {
+      "destination": "/user/:slug*",
+      "source": "/t(user)/:slug*"
     }
   },
   "options": {
