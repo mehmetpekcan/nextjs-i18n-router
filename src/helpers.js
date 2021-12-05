@@ -32,16 +32,8 @@ const handler = (routeChange, name, as, options = {}) => {
   routeChange(...args);
 };
 
-const routerAdapter = ({
-  push,
-  replace,
-  prefetch,
+const routerAdapter = ({ push, replace, prefetch, locale, ...rest }) => ({
   locale,
-  asPath,
-  ...rest
-}) => ({
-  locale,
-  asPath: `/${locale}${asPath}`,
   prefetch: (name, as) => handler(prefetch, name, as, null),
   push: (name, as, opts) => handler(push, name, as, { locale, ...opts }),
   replace: (name, as, opts) => handler(replace, name, as, { locale, ...opts }),

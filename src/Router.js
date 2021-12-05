@@ -2,6 +2,6 @@ import nextRouter from "next/router";
 
 import { routerAdapter } from "./helpers";
 
-const router = () => routerAdapter(nextRouter);
+const Router = () => routerAdapter(nextRouter);
 
-export default router;
+export default Router;
