@@ -62,6 +62,12 @@ export default function Home() {
               <p>Go `user` route with three param.</p>
             </a>
           </Link>
+          <Link name="users" passHref>
+            <a className={styles.card}>
+              <h2>`users` &rarr;</h2>
+              <p>Go `users` route.</p>
+            </a>
+          </Link>
         </div>
       </main>
 
@@ -79,4 +85,10 @@ export default function Home() {
       </footer>
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  return {
+    props: {}, // will be passed to the page component as props
+  };
 }

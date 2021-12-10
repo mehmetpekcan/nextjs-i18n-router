@@ -19,22 +19,27 @@
   "pages": {
     "home": {
       "destination": "/",
+      "pathname": "/",
       "source": "/t(home)"
     },
     "users404": {
       "destination": "/404",
+      "pathname": "/404",
       "source": "/t(users)/:slug/:slug*/"
     },
     "users": {
       "destination": "/user/:slug*",
+      "pathname": "/user/[...slug]",
       "source": "/t(users)/:slug*"
     },
     "user404": {
       "destination": "/404",
+      "pathname": "/404",
       "source": "/t(user)/:slug/:slug/:slug/:slug*"
     },
     "user": {
       "destination": "/user/:slug*",
+      "pathname": "/user/[...slug]",
       "source": "/t(user)/:slug*"
     }
   },
