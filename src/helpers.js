@@ -56,6 +56,7 @@ const handler = (routeChange, name, as, options = {}) => {
 
 const routerAdapter = ({ push, replace, prefetch, locale, ...rest }) => ({
   locale,
+  asWithLocale: `${locale}${rest.as}`,
   prefetch: (name, as) => handler(prefetch, name, as, null),
   push: (name, as, opts) => handler(push, name, as, { locale, ...opts }),
   replace: (name, as, opts) => handler(replace, name, as, { locale, ...opts }),
