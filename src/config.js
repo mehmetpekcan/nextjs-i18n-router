@@ -1,12 +1,21 @@
 const fs = require("fs");
 const path = require("path");
 
-const adaptRoutesToNextJS = (routesConfig) =>
-  Object.values(routesConfig).map(({ source, destination }) => ({
-    source,
-    destination,
-    locale: false,
-  }));
+const adaptRoutesToNextJS = (routes) => {
+  const rewrites = [];
+
+  Object.values(routes).forEach((route) => {
+    Object.values(route.alternates).forEach((page) => {
+      rewrites.push({
+        locale: false,
+        source: page.source,
+        destination: page.destination,
+      });
+    });
+  });
+
+  return rewrites;
+};
 
 const withNextI18nRouter = (nextConfig = {}) => {
   return Object.assign({}, nextConfig, {
@@ -22,7 +31,7 @@ const withNextI18nRouter = (nextConfig = {}) => {
           nextConfig.i18n.locales.forEach((locale) => {
             const [name, page] = entry;
 
-            let { source } = page;
+            let { source, destination, ...restPageOptions } = page;
             const translateKeyRegex = /t\((.*)\)/;
 
             while (translateKeyRegex.test(source)) {
@@ -30,10 +39,15 @@ const withNextI18nRouter = (nextConfig = {}) => {
               source = source.replace(key, translations[value][locale]);
             }
 
-            __ROUTES__[`${locale}_${name}`] = {
-              ...page,
-              source: `/${locale}${source}`,
-              destination: `/${locale}${page.destination}`,
+            __ROUTES__[name] = {
+              ...restPageOptions,
+              alternates: {
+                ...__ROUTES__[name]?.alternates,
+                [locale]: {
+                  source: `/${locale}${source}`,
+                  destination: `/${locale}${destination}`,
+                },
+              },
             };
           });
         });

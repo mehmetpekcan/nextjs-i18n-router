@@ -1,7 +1,14 @@
 import { compile } from "path-to-regexp";
 
+const isServer = () => typeof window === "undefined";
+const getRoutes = () => JSON.parse(process.env.NEXT_PUBLIC_I18N_ROUTES);
+const getOptions = () => JSON.parse(process.env.NEXT_PUBLIC_ROUTER_OPTIONS);
+
+/**
+ * Find the route by provided `pathname`
+ */
 const findRouteByPathname = (pathname) => {
-  const routes = JSON.parse(process.env.NEXT_PUBLIC_I18N_ROUTES);
+  const routes = getRoutes();
 
   try {
     return Object.values(routes).find((route) => route.pathname === pathname);
@@ -10,24 +17,26 @@ const findRouteByPathname = (pathname) => {
   }
 };
 
+/**
+ * Get active route by provided `pathname` yet if `pathname`
+ * won't be provided, get the pathname from `router`
+ */
 const getActiveRoute = (pathname) => {
-  const isServer = typeof window === "undefined";
-
-  if (isServer && !pathname) {
+  if (isServer() && !pathname) {
     throw new Error("Please provide pathname on Server Side");
   }
 
   const router = require("next/router").default;
 
-  return findRouteByPathname(pathname || router.pathname);
+  return findRouteByPathname(pathname || router.pathname, router.locale);
 };
 
 const createUrl = (name, locale, params) => {
   try {
-    const routes = JSON.parse(process.env.NEXT_PUBLIC_I18N_ROUTES);
-    const options = JSON.parse(process.env.NEXT_PUBLIC_ROUTER_OPTIONS);
+    const routes = getRoutes();
+    const options = getOptions();
 
-    const { source } = routes[`${locale}_${name}`];
+    const { source } = routes[name].alternates[locale];
 
     let finalSource =
       locale === options.defaultLocale && options.hideDefaultLocalePrefix
@@ -55,13 +64,14 @@ const handler = (routeChange, name, as, options = {}) => {
 };
 
 const routerAdapter = ({ push, replace, prefetch, locale, ...rest }) => ({
+  ...rest,
   locale,
+  getActiveRoute,
+  routes: getRoutes(),
   asWithLocale: `${locale}${rest.as}`,
   prefetch: (name, as) => handler(prefetch, name, as, null),
   push: (name, as, opts) => handler(push, name, as, { locale, ...opts }),
   replace: (name, as, opts) => handler(replace, name, as, { locale, ...opts }),
-  getActiveRoute,
-  ...rest,
 });
 
 export { createUrl, routerAdapter };
