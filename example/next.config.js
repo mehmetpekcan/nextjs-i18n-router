@@ -1,4 +1,4 @@
-const withNextI18nRouter = require("nextjs-i18n-router/config");
+const { withNextI18nRouter } = require("nextjs-i18n-router/plugin");
 
 module.exports = withNextI18nRouter({
   i18n: {

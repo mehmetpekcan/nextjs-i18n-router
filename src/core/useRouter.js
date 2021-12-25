@@ -1,11 +1,11 @@
 import { useRouter as useNextRouter } from "next/router";
 
-import { routerAdapter } from "./helpers";
+import RouterAdapter from "./RouterAdapter";
 
 const useRouter = () => {
   const router = useNextRouter();
 
-  return routerAdapter(router);
+  return RouterAdapter(router);
 };
 
 export default useRouter;

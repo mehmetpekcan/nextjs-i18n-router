@@ -1,14 +1,19 @@
+import getConfig from "next/config";
 import { compile } from "path-to-regexp";
 
 const isServer = () => typeof window === "undefined";
-const getRoutes = () => JSON.parse(process.env.NEXT_PUBLIC_I18N_ROUTES);
-const getOptions = () => JSON.parse(process.env.NEXT_PUBLIC_ROUTER_OPTIONS);
+
+const getPluginConfig = () => {
+  const { publicRuntimeConfig } = getConfig();
+
+  return JSON.parse(publicRuntimeConfig.nextI18nRoutes);
+};
 
 /**
  * Find the route by provided `pathname`
  */
 const findRouteByPathname = (pathname) => {
-  const routes = getRoutes();
+  const { routes } = getPluginConfig();
 
   try {
     return Object.values(routes).find((route) => route.pathname === pathname);
@@ -31,10 +36,13 @@ const getActiveRoute = (pathname) => {
   return findRouteByPathname(pathname || router.pathname, router.locale);
 };
 
+/**
+ * Create url according to given `name`, `locale` and `params`
+ * `name` arg should be findable inside i18n-routes.json file
+ */
 const createUrl = (name, locale, params) => {
   try {
-    const routes = getRoutes();
-    const options = getOptions();
+    const { routes, options } = getPluginConfig();
 
     const { source } = routes[name].alternates[locale];
 
@@ -48,7 +56,12 @@ const createUrl = (name, locale, params) => {
 
     return finalSource;
   } catch (error) {
-    return "/";
+    throw new Error(
+      `Url creation failed by provided
+        name: ${name}
+        locale: ${locale}
+        params: ${JSON.stringify(params)}`
+    );
   }
 };
 
@@ -63,15 +76,16 @@ const handler = (routeChange, name, as, options = {}) => {
   routeChange(...args);
 };
 
-const routerAdapter = ({ push, replace, prefetch, locale, ...rest }) => ({
+const RouterAdapter = ({ push, replace, prefetch, locale, ...rest }) => ({
   ...rest,
   locale,
+  createUrl,
   getActiveRoute,
-  routes: getRoutes(),
-  asWithLocale: `${locale}${rest.as}`,
+  routes: getPluginConfig().routes,
+  asPathWithLocale: `/${locale}${rest.asPath}`,
   prefetch: (name, as) => handler(prefetch, name, as, null),
   push: (name, as, opts) => handler(push, name, as, { locale, ...opts }),
   replace: (name, as, opts) => handler(replace, name, as, { locale, ...opts }),
 });
 
-export { createUrl, routerAdapter };
+export default RouterAdapter;

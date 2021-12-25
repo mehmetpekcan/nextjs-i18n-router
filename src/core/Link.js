@@ -1,11 +1,10 @@
 import NextLink from "next/link";
-import { useRouter } from "next/router";
 
-import { createUrl } from "./helpers";
+import useRouter from "./useRouter";
 
 const Link = ({ name, locale, params, ...props }) => {
   const router = useRouter();
-  const translatedUrl = createUrl(name, locale || router.locale, params);
+  const translatedUrl = router.createUrl(name, locale || router.locale, params);
 
   return (
     <NextLink
