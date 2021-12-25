@@ -12,7 +12,7 @@ const parseConfigFile = ({ locales, defaultLocale }) => {
 
     Object.entries(pages).forEach((entry) => {
       locales.forEach((locale) => {
-        const [name, { source, destination, ...restPageOptions }] = entry;
+        let [name, { source, destination, ...restPageOptions }] = entry;
         const translateKeyRegex = /t\((.*)\)/;
 
         while (translateKeyRegex.test(source)) {

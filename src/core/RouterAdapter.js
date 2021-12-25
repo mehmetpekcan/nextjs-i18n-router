@@ -12,7 +12,7 @@ const getPluginConfig = () => {
 /**
  * Find the route by provided `pathname`
  */
-const findRouteByPathname = (pathname) => {
+const getRoute = (pathname) => {
   const { routes } = getPluginConfig();
 
   try {
@@ -32,8 +32,12 @@ const getActiveRoute = (pathname) => {
   }
 
   const router = require("next/router").default;
+  const activeRoute = getRoute(pathname || router.pathname, router.locale);
 
-  return findRouteByPathname(pathname || router.pathname, router.locale);
+  return {
+    ...activeRoute,
+    ...activeRoute.alternates[router.locale],
+  };
 };
 
 /**
