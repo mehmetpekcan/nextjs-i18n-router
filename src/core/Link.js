@@ -1,10 +1,14 @@
+import { useMemo } from "react";
 import NextLink from "next/link";
 
 import useRouter from "./useRouter";
 
 const Link = ({ name, locale, params, ...props }) => {
   const router = useRouter();
-  const translatedUrl = router.createUrl(name, locale || router.locale, params);
+  const translatedUrl = useMemo(
+    () => router.createUrl(name, locale || router.locale, params),
+    [name, locale, params]
+  );
 
   return (
     <NextLink
