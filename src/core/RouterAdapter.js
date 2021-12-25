@@ -1,5 +1,5 @@
 import getConfig from "next/config";
-import { compile } from "path-to-regexp";
+import { compile, match } from "path-to-regexp";
 
 const isServer = () => typeof window === "undefined";
 
@@ -12,13 +12,25 @@ const getPluginConfig = () => {
 /**
  * Find the route by provided `pathname`
  */
-const getRoute = (pathname) => {
+const getRoute = (pathname, asPath, locale) => {
   const { routes } = getPluginConfig();
 
-  try {
-    return Object.values(routes).find((route) => route.pathname === pathname);
-  } catch (error) {
-    throw new Error(`Route couldn't find by provided pathname: ${pathname}`);
+  const routeCandidates = Object.values(routes).filter(
+    (route) => route.pathname === pathname
+  );
+
+  if (routeCandidates.length === 1) {
+    return routeCandidates[0];
+  } else if (routeCandidates.length > 1) {
+    return routeCandidates.find((candidate) => {
+      const sourceMatcher = match(candidate.alternates[locale].source);
+
+      return sourceMatcher(`/${locale}${asPath}`);
+    });
+  } else {
+    throw new Error(
+      `Route couldn't find by provided pathname: ${pathname} and asPath: ${asPath}`
+    );
   }
 };
 
@@ -31,13 +43,10 @@ const getActiveRoute = (pathname) => {
     throw new Error("Please provide pathname on Server Side");
   }
 
-  const router = require("next/router").default;
-  const activeRoute = getRoute(pathname || router.pathname, router.locale);
+  const { pathname: path, asPath, locale } = require("next/router").default;
+  const activeRoute = getRoute(pathname || path, asPath, locale);
 
-  return {
-    ...activeRoute,
-    ...activeRoute.alternates[router.locale],
-  };
+  return { ...activeRoute, ...activeRoute.alternates[router.locale] };
 };
 
 /**

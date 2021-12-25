@@ -29,7 +29,7 @@
     },
     "users": {
       "destination": "/user/:slug*",
-      "pathname": "/user/[...slug]",
+      "pathname": "/user/[[...slug]]",
       "source": "/t(users)/:slug*"
     },
     "user404": {
@@ -39,7 +39,7 @@
     },
     "user": {
       "destination": "/user/:slug*",
-      "pathname": "/user/[...slug]",
+      "pathname": "/user/[[...slug]]",
       "source": "/t(user)/:slug*"
     }
   },
