@@ -3,17 +3,16 @@ const path = require("path");
 
 const parseConfigFile = ({ locales, defaultLocale }) => {
   try {
-    const __ROUTES__ = {};
-    const ROUTES_PATH = path.join("i18n-routes.json");
-    const routesJSON = fs.readFileSync(ROUTES_PATH, "utf8");
+    const configPath = path.join("i18n-routes.json");
 
+    const routesJSON = fs.readFileSync(configPath, "utf8");
+
+    const routesTree = {};
     const { pages, translations, options } = JSON.parse(routesJSON);
 
     Object.entries(pages).forEach((entry) => {
       locales.forEach((locale) => {
-        const [name, page] = entry;
-
-        let { source, destination, ...restPageOptions } = page;
+        const [name, { source, destination, ...restPageOptions }] = entry;
         const translateKeyRegex = /t\((.*)\)/;
 
         while (translateKeyRegex.test(source)) {
@@ -21,10 +20,10 @@ const parseConfigFile = ({ locales, defaultLocale }) => {
           source = source.replace(key, translations[value][locale]);
         }
 
-        __ROUTES__[name] = {
+        routesTree[name] = {
           ...restPageOptions,
           alternates: {
-            ...__ROUTES__[name]?.alternates,
+            ...routesTree[name]?.alternates,
             [locale]: {
               source: `/${locale}${source}`,
               destination: `/${locale}${destination}`,
@@ -35,11 +34,8 @@ const parseConfigFile = ({ locales, defaultLocale }) => {
     });
 
     return {
-      routes: __ROUTES__,
-      options: {
-        ...options,
-        defaultLocale: defaultLocale,
-      },
+      routes: routesTree,
+      options: { ...options, defaultLocale: defaultLocale },
     };
   } catch (err) {
     throw new Error(err);
@@ -63,27 +59,27 @@ const adaptRoutesToNextJS = (routes) => {
 };
 
 const withNextI18nRouter = (nextConfig = {}) => {
-  const pluginConfig = parseConfigFile(nextConfig.i18n);
+  const config = parseConfigFile(nextConfig.i18n);
 
   return Object.assign({}, nextConfig, {
     async rewrites() {
-      const i18nrewrites = adaptRoutesToNextJS(pluginConfig.routes);
+      const i18nRewrites = adaptRoutesToNextJS(config.routes);
       const existingRewrites = nextConfig.rewrites
         ? await nextConfig.rewrites()
         : [];
 
       if (Array.isArray(existingRewrites)) {
-        return [...existingRewrites, ...i18nrewrites];
+        return [...existingRewrites, ...i18nRewrites];
       }
 
       return {
         ...existingRewrites,
-        afterFiles: [...(existingRewrites.afterFiles || []), ...i18nrewrites],
+        afterFiles: [...(existingRewrites.afterFiles || []), ...i18nRewrites],
       };
     },
     publicRuntimeConfig: {
       ...nextConfig.publicRuntimeConfig,
-      nextI18nRoutes: JSON.stringify(pluginConfig),
+      nextI18nRoutes: JSON.stringify(config),
     },
   });
 };
