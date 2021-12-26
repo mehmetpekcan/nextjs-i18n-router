@@ -1,12 +1,22 @@
-import getConfig from "next/config";
-import { compile, match } from "path-to-regexp";
-
+let pluginConfig = null;
 const isServer = () => typeof window === "undefined";
 
-const getPluginConfig = () => {
-  const { publicRuntimeConfig } = getConfig();
+const getLocale = (locale = null) => {
+  if (locale) return locale;
 
-  return JSON.parse(publicRuntimeConfig.nextI18nRoutes);
+  const { locale: routerLocale } = require("next/router").default.router;
+
+  return routerLocale;
+};
+
+const getPluginConfig = () => {
+  if (!pluginConfig) {
+    const getConfig = require("next/config").default;
+    const { publicRuntimeConfig } = getConfig();
+    pluginConfig = JSON.parse(publicRuntimeConfig.nextI18nRoutes);
+  }
+
+  return pluginConfig;
 };
 
 /**
@@ -22,6 +32,8 @@ const getRoute = (pathname, asPath, locale) => {
   if (routeCandidates.length === 1) {
     return routeCandidates[0];
   } else if (routeCandidates.length > 1) {
+    const { match } = require("path-to-regexp");
+
     return routeCandidates.find((candidate) => {
       const sourceMatcher = match(candidate.alternates[locale].source);
 
@@ -43,20 +55,21 @@ const getActiveRoute = (pathname) => {
     throw new Error("Please provide pathname on Server Side");
   }
 
-  const { pathname: path, asPath, locale } = require("next/router").default;
+  const { pathname: path, asPath } = require("next/router").default.router;
+  const locale = getLocale();
   const activeRoute = getRoute(pathname || path, asPath, locale);
 
-  return { ...activeRoute, ...activeRoute.alternates[router.locale] };
+  return { ...activeRoute, ...activeRoute.alternates[locale] };
 };
 
 /**
  * Create url according to given `name`, `locale` and `params`
  * `name` arg should be findable inside i18n-routes.json file
  */
-const createUrl = (name, locale, params) => {
+const createUrl = (name, localeArg, params) => {
   try {
+    const locale = getLocale(localeArg);
     const { routes, options } = getPluginConfig();
-
     const { source } = routes[name].alternates[locale];
 
     let finalSource =
@@ -64,6 +77,7 @@ const createUrl = (name, locale, params) => {
         ? `${source.replace(`/${locale}`, "")}`
         : `${source}`;
 
+    const { compile } = require("path-to-regexp");
     const toUrl = compile(finalSource);
     finalSource = toUrl(params);
 
