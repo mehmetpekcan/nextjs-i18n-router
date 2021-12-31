@@ -71,7 +71,7 @@ const parseConfigFile = ({ locales, defaultLocale }) => {
 
     Object.entries(pages).forEach((entry) => {
       locales.forEach((locale) => {
-        let [name, { source, pathname, ...restPageOptions }] = entry;
+        let [name, { source, pathname, meta }] = entry;
         const translateKeyRegex = /t\((.*)\)/;
 
         while (translateKeyRegex.test(source)) {
@@ -81,7 +81,7 @@ const parseConfigFile = ({ locales, defaultLocale }) => {
 
         routes.afterFiles[name] = {
           pathname,
-          ...restPageOptions,
+          meta,
           alternates: {
             ...routes.afterFiles[name]?.alternates,
             [locale]: {

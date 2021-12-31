@@ -44,7 +44,10 @@
     },
     "color": {
       "pathname": "/[color]",
-      "source": "/t(color)/:color"
+      "source": "/t(color)/:color",
+      "meta": {
+        "requiresAuth": true
+      }
     }
   },
   "options": {
