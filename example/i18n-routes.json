@@ -14,37 +14,41 @@
       "tr": "kullanici",
       "en": "user",
       "de": "benutzer"
+    },
+    "color": {
+      "tr": "renk",
+      "en": "color",
+      "de": "Farbe"
     }
   },
   "pages": {
     "home": {
-      "destination": "/",
       "pathname": "/",
       "source": "/t(home)"
     },
     "users404": {
-      "destination": "/404",
       "pathname": "/404",
       "source": "/t(users)/:slug/:slug*/"
     },
     "users": {
-      "destination": "/userPage/:slug*",
       "pathname": "/userPage/[[...slug]]",
       "source": "/t(users)/:slug*"
     },
     "user404": {
-      "destination": "/404",
       "pathname": "/404",
       "source": "/t(user)/:slug/:slug/:slug/:slug*"
     },
     "user": {
-      "destination": "/userPage/:slug*",
       "pathname": "/userPage/[[...slug]]",
       "source": "/t(user)/:slug*"
+    },
+    "color": {
+      "pathname": "/[color]",
+      "source": "/t(color)/:color"
     }
   },
   "options": {
-    "hideDefaultLocalePrefix": false,
+    "hideDefaultLocalePrefix": true,
     "closeFileSystemRouting": true
   }
 }

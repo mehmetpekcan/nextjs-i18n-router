@@ -2,6 +2,16 @@ const fs = require("fs");
 const path = require("path");
 
 /**
+ * Formats `pathname` to `destination` by requirement of rewrites
+ */
+const formatPathnameToDestination = (pathname) => {
+  return pathname
+    .replace(/\[\[\.\.\.(.*?)\]\]/g, ":$1*") // Matches [[...slug]]
+    .replace(/\[\.\.\.(.*?)\]/g, ":$1*") // Matches [...slug]
+    .replace(/\[(.*?)\]/g, ":$1"); // Matches [slug]
+};
+
+/**
  * Creates a bunch of 404 destinated routes list
  * with the given pages
  */
@@ -61,7 +71,7 @@ const parseConfigFile = ({ locales, defaultLocale }) => {
 
     Object.entries(pages).forEach((entry) => {
       locales.forEach((locale) => {
-        let [name, { source, destination, ...restPageOptions }] = entry;
+        let [name, { source, pathname, ...restPageOptions }] = entry;
         const translateKeyRegex = /t\((.*)\)/;
 
         while (translateKeyRegex.test(source)) {
@@ -70,12 +80,13 @@ const parseConfigFile = ({ locales, defaultLocale }) => {
         }
 
         routes.afterFiles[name] = {
+          pathname,
           ...restPageOptions,
           alternates: {
             ...routes.afterFiles[name]?.alternates,
             [locale]: {
               source: `/${locale}${source}`,
-              destination: `/${locale}${destination}`,
+              destination: `/${locale}${formatPathnameToDestination(pathname)}`,
             },
           },
         };

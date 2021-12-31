@@ -69,6 +69,12 @@ export default function Home() {
               <p>Go `users` route.</p>
             </a>
           </Link>
+          <Link name="color" params={{ color: "red" }} passHref>
+            <a className={styles.card}>
+              <h2>`color` &rarr;</h2>
+              <p>Go `color` route.</p>
+            </a>
+          </Link>
         </div>
       </main>
 
