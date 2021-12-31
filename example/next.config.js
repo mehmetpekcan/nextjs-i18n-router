@@ -10,7 +10,7 @@ module.exports = withNextI18nRouter({
   rewrites: async function rewrites() {
     return [
       {
-        source: "/murat",
+        source: "/existing-rewrite",
         destination: "/",
       },
     ];
