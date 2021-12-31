@@ -4,24 +4,28 @@ function Home() {
   return (
     <div>
       <div>
-        <div className="flex flex-col items-center px-2 md:px-20 text-center">
-          <h1 className="text-6xl md:text-8xl font-extrabold tracking-tighter leading-thight">
-            Monorepos that
+        <div className="flex flex-col items-center px-2 sm:px-20 mb-5 text-center">
+          <h1 className="text-6xl sm:text-8xl font-extrabold tracking-tighter leading-thight">
+            NextJS Router
             <span
               className="block text-transperent bg-clip-text bg-gradient-to-l from-lighterGreen to-lightGreen"
               style={{ color: "transparent" }}
             >
-              make ship happen.
+              with localization
             </span>
           </h1>
-          <p className="text-lightWhite text-xl md:text-3xl mt-2 md:mt-5">
-            Turborepo is a high-performance build system for JavaScript andw
-            TypeScript codebases.
+          <p className="text-darkWhite text-xl sm:text-3xl mt-3 sm:mt-5">
+            <span className="text-white px-2 rounded">nextjs-i18n-router</span>
+            is a plugin for integrating multilanguage for your URLs.
           </p>
         </div>
-        <div className="flex flex-col">
-          <button className="text-lightGreen">Documentation</button>
-          <button>yarn add @xxxxx</button>
+        <div className="flex flex-col items-center sm:flex-row w-full justify-center">
+          <button className="w-full sm:w-auto mt-3 flex items-center justify-center py-3 px-5 rounded ring-2 ring-white bg-white text-black">
+            Documentation
+          </button>
+          <button className="w-full sm:w-auto mt-3 sm:ml-3 flex items-center justify-center py-3 px-5 rounded ring-2 ring-darkWhite text-lightWhite">
+            yarn add @xxxxx
+          </button>
         </div>
       </div>
     </div>
