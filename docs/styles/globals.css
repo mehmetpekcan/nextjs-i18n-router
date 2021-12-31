@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background: theme("colors.black");
+    font-family: "Open Sans", sans-serif;
+    color: theme("colors.white");
+  }
+
+  p {
+    color: theme("colors.lightWhite");
+  }
+}
